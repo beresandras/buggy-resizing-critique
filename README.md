@@ -12,9 +12,11 @@ Try it out in a Colab Notebook: [![Open In Colab](https://colab.research.google.
 My opinion:
 * neither of the used image downsampling methods is "buggy", not applying antialiasing by default is an understandable design decision for both image and tensor operations.
 * the main figure of the paper is misleading, and it only illustrates the issues of aliasing for image resizing.
-* the aliasing issue with downsampling can be solved in all frameworks by simply setting a few parameters correctly.
+* the aliasing issue with downsampling can be solved in all frameworks by simply setting a few parameters correctly. My criticism is that this is not mentioned in the paper.
 * `torchvision.transforms.Resize()` is claimed to only be a "a wrapper around the PIL library" in a note in Section 3.2 of the [paper](https://arxiv.org/abs/2104.11222). This is [true for PIL image inputs](https://github.com/pytorch/vision/blob/main/torchvision/transforms/functional.py#L415), but is incorrect for `torch.Tensors`, which are [resized using torchvision interpolation operations](https://github.com/pytorch/vision/blob/main/torchvision/transforms/functional_tensor.py#L480).
 * the remaining parts of the paper provide valuable insights into the effects of interpolation methods, quantization and compression on the [FID score](https://arxiv.org/abs/1706.08500) of generative models.
+
+Update: Just found out that there is another, very thorough investigation of the same issue. Highly recommend checking the [blogpost](https://blog.zuru.tech/machine-learning/2021/08/09/the-dangers-behind-image-resizing) out. They also implement an [OpenCV-compatible Pillow-equivalent resizing](https://github.com/zurutech/pillow-resize) that provides proper antialiasing for all interpolations.
 
 Bilinear downsampling results with and without aliasing:
 ![resizing with and without aliasing](./assets/resizing.png)
